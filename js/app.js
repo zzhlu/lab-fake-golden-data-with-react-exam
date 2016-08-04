@@ -10,10 +10,19 @@ const App = React.createClass({
       isEditor: !this.state.isEditor
     });
   },
+  addElement: function (element) {
+    const elements = this.state.elements;
+    elements.push(element);
+    this.setState({
+      elements: elements
+    });
+  },
   render: function () {
     return <div>
       <button onClick={this.toggle}>{this.state.isEditor ? 'Preview' : 'Edit'}</button>
-      <div className={this.state.isEditor ? '' : 'hidden'}><Editor /></div>
+      <div className={this.state.isEditor ? '' : 'hidden'}>
+        <Editor elements={this.state.elements} onAdd={this.addElement}/>
+      </div>
       <div className={this.state.isEditor ? 'hidden' : ''}><Preview /></div>
     </div>
   }
@@ -21,7 +30,39 @@ const App = React.createClass({
 
 const Editor = React.createClass({
   render: function () {
-    return <div>Editor</div>
+    return <div>
+      <Right onAdd={this.props.onAdd}/>
+      <Left elements={this.props.elements}/>
+    </div>
+  }
+});
+
+const Right = React.createClass({
+  add: function () {
+    const element = $("input[name=element]:checked").val();
+    this.props.onAdd(element);
+  },
+  render: function () {
+    return <div>
+      <input type="radio" name="element" value="text"/>Text
+      <input type="radio" name="element" value="date"/>Date
+      <button onClick={this.add}> +</button>
+    </div>
+  }
+});
+
+const Left = React.createClass({
+  render: function () {
+    return <div>
+      {
+        this.props.elements.map((ele, index) => {
+          return <div key={index}>
+            <input type={ele}/>
+            <button> X</button>
+          </div>
+        })
+      }
+    </div>
   }
 });
 
