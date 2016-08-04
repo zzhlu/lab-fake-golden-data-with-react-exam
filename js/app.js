@@ -1,33 +1,75 @@
 const App = React.createClass({
   getInitialState: function () {
     return {
-      isPreview: true
+      isEditor: true,
+      elements: []
     }
   },
   toggle: function () {
     this.setState({
-      isPreview: !this.state.isPreview
+      isEditor: !this.state.isEditor
+    });
+  },
+  addElement: function (element) {
+    const elements = this.state.elements;
+    elements.push(element);
+    this.setState({
+      elements: elements
     });
   },
   render: function () {
-    const text = this.state.isPreview ? '编辑' : '预览';
+    const text = this.state.isEditor ? 'Preview' : 'Edit';
     return <div>
       <button onClick={this.toggle}>{text}</button>
-      <Editor className={this.state.isPreview ? 'hidden' : ''}/>
-      <Preview className={this.state.isPreview ? '' : 'hidden'}/>
+      <div className={this.state.isEditor ? '' : 'hidden'}>
+        <Editor onAdd={this.addElement} elements={this.state.elements}/>
+      </div>
+      <div className={this.state.isEditor ? 'hidden' : ''}><Preview /></div>
     </div>
   }
 });
 
 const Editor = React.createClass({
   render: function () {
-    return <div className={this.props.className}>Editor</div>
+    return <div>
+      <Right onAdd={this.props.onAdd}/>
+      <Left elements={this.props.elements}/>
+    </div>
+  }
+});
+
+const Right = React.createClass({
+  add: function () {
+    const element = $("input[name=element]:checked").val();
+    this.props.onAdd(element);
+  },
+  render: function () {
+    return <div>
+      <input type="radio" name="element" value="text"/>Text
+      <input type="radio" name="element" value="date"/>Date
+      <button onClick={this.add}> +</button>
+    </div>
+  }
+});
+
+const Left = React.createClass({
+  render: function () {
+    return <div>
+      {
+        this.props.elements.map((ele, index) => {
+          return <div key={index}>
+            <input type={ele}/>
+            <button> -</button>
+          </div>
+        })
+      }
+    </div>
   }
 });
 
 const Preview = React.createClass({
   render: function () {
-    return <div className={this.props.className}>Preview</div>
+    return <div>Preview</div>
   }
 });
 
