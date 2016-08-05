@@ -80,7 +80,16 @@ const Left = React.createClass({
 
 const Preview = React.createClass({
   render: function () {
-    return <div>Preview</div>
+    return <div>
+      {
+        this.props.elements.map((ele, index) => {
+          return <div key={index}>
+            <input type={ele}/>
+          </div>
+        })
+      }
+      <button>Submit</button>
+    </div>
   }
 });
 
