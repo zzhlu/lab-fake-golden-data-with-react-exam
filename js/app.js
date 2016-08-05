@@ -25,8 +25,9 @@ const App = React.createClass({
     });
   },
   render: function () {
+    const text = this.state.isEditor ? 'Preview' : 'Edit';
     return <div>
-      <button onClick={this.toggle}>{this.state.isEditor ? 'Preview' : 'Edit'}</button>
+      <button onClick={this.toggle}>{text}</button>
       <div className={this.state.isEditor ? '' : 'hidden'}>
         <Editor elements={this.state.elements} onAdd={this.addElement} onDelete={this.deleteElement}/>
       </div>
@@ -65,29 +66,25 @@ const Left = React.createClass({
     this.props.onDelete(index);
   },
   render: function () {
-    return <div>
-      {
-        this.props.elements.map((ele, index) => {
-          return <div key={index}>
-            <input type={ele}/>
-            <button onClick={this.remove.bind(this, index)}>X</button>
-          </div>
-        })
-      }
-    </div>
+    const elements = this.props.elements.map((ele, index) => {
+      return <div key={index}>
+        <input type={ele}/>
+        <button onClick={this.remove.bind(this, index)}>X</button>
+      </div>
+    })
+    return <div> {elements} </div>
   }
 });
 
 const Preview = React.createClass({
   render: function () {
+    const elements = this.props.elements.map((ele, index) => {
+      return <div key={index}>
+        <input type={ele}/>
+      </div>
+    })
     return <div>
-      {
-        this.props.elements.map((ele, index) => {
-          return <div key={index}>
-            <input type={ele}/>
-          </div>
-        })
-      }
+      { elements }
       <button>Submit</button>
     </div>
   }
