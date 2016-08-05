@@ -25,15 +25,20 @@ const App = React.createClass({
     });
   },
   render: function () {
-    const text = this.state.isEditor ? 'Preview' : 'Edit';
-    return <div  className="row">
-      <button className="center-block btn btn-info" onClick={this.toggle}>{text}</button>
-      <div className={this.state.isEditor ? '' : 'hidden'}>
-        <Editor elements={this.state.elements} onAdd={this.addElement} onDelete={this.deleteElement}/>
-      </div>
-      <div className={this.state.isEditor ? 'hidden' : 'text-center'}>
-        <Preview elements={this.state.elements}/>
-      </div>
+    const isEdite = this.state.isEditor;
+    return <div>
+      <ReactRouter.Link onClick={this.toggle} to={isEdite ? '/preview' : '/edit'}>
+        {isEdite ? 'Preview' : 'Edit'}
+      </ReactRouter.Link>
+      {
+        this.props.children && React.cloneElement(this.props.children,
+          {
+            elements: this.state.elements,
+            onAdd: this.addElement,
+            onDelete: this.deleteElement
+          }
+        )
+      }
     </div>
   }
 });
@@ -53,10 +58,10 @@ const Right = React.createClass({
     this.props.onAdd(element);
   },
   render: function () {
-    return <div className="col-md-offset-8 right">
-      <div className="radio"><input type="radio" name="element" value="text"/>Text</div>
-      <div className="radio"><input type="radio" name="element" value="date"/>Date</div>
-      <button className="addBtn btn btn-info" onClick={this.add}>+</button>
+    return <div>
+      <input type="radio" name="element" value="text"/>Text
+      <input type="radio" name="element" value="date"/>Date
+      <button onClick={this.add}> +</button>
     </div>
   }
 });
@@ -66,28 +71,39 @@ const Left = React.createClass({
     this.props.onDelete(index);
   },
   render: function () {
-    const elements = this.props.elements.map((ele, index) => {
-      return <div key={index}>
-        <input type={ele}/>
-        <button onClick={this.remove.bind(this, index)}>X</button>
-      </div>
-    })
-    return <div className="col-md-offset-2"> {elements} </div>
+    return <div>
+      {
+        this.props.elements.map((ele, index) => {
+          return <div key={index}>
+            <input type={ele}/>
+            <button onClick={this.remove.bind(this, index)}> X</button>
+          </div>
+        })
+      }
+    </div>
   }
 });
 
 const Preview = React.createClass({
   render: function () {
-    const elements = this.props.elements.map((ele, index) => {
-      return <div key={index}>
-        <input type={ele}/>
-      </div>
-    })
-    return <div className="center-block preview">
-      { elements }
-      <button id="submit" className="btn btn-info">Submit</button>
+    return <div>
+      {
+        this.props.elements.map((ele, index) => {
+          return <div key={index}>
+            <input type={ele}/>
+          </div>
+        })
+      }
+      <button>Submit</button>
     </div>
   }
 });
 
-ReactDOM.render(<App />, document.getElementById('content'));
+ReactDOM.render(
+  <ReactRouter.Router>
+    <ReactRouter.Route path="/" component={App}>
+      <ReactRouter.Route path="/preview" component={Preview}/>
+      <ReactRouter.Route path="/edit" component={Editor}/>
+    </ReactRouter.Route>
+  </ReactRouter.Router>, document.getElementById('content')
+);
