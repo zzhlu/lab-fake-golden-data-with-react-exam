@@ -26,12 +26,12 @@ const App = React.createClass({
   },
   render: function () {
     const text = this.state.isEditor ? 'Preview' : 'Edit';
-    return <div>
-      <button onClick={this.toggle}>{text}</button>
+    return <div  className="row">
+      <button className="center-block btn btn-info" onClick={this.toggle}>{text}</button>
       <div className={this.state.isEditor ? '' : 'hidden'}>
         <Editor elements={this.state.elements} onAdd={this.addElement} onDelete={this.deleteElement}/>
       </div>
-      <div className={this.state.isEditor ? 'hidden' : ''}>
+      <div className={this.state.isEditor ? 'hidden' : 'text-center'}>
         <Preview elements={this.state.elements}/>
       </div>
     </div>
@@ -53,10 +53,10 @@ const Right = React.createClass({
     this.props.onAdd(element);
   },
   render: function () {
-    return <div>
-      <input type="radio" name="element" value="text"/>Text
-      <input type="radio" name="element" value="date"/>Date
-      <button onClick={this.add}>+</button>
+    return <div className="col-md-offset-8 right">
+      <div className="radio"><input type="radio" name="element" value="text"/>Text</div>
+      <div className="radio"><input type="radio" name="element" value="date"/>Date</div>
+      <button className="addBtn btn btn-info" onClick={this.add}>+</button>
     </div>
   }
 });
@@ -72,7 +72,7 @@ const Left = React.createClass({
         <button onClick={this.remove.bind(this, index)}>X</button>
       </div>
     })
-    return <div> {elements} </div>
+    return <div className="col-md-offset-2"> {elements} </div>
   }
 });
 
@@ -83,9 +83,9 @@ const Preview = React.createClass({
         <input type={ele}/>
       </div>
     })
-    return <div>
+    return <div className="center-block preview">
       { elements }
-      <button>Submit</button>
+      <button id="submit" className="btn btn-info">Submit</button>
     </div>
   }
 });

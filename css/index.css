@@ -1,0 +1,27 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.btn {
+    margin-top: 20px;
+    font-size: large;
+}
+
+.radio {
+    font-size: 20px;
+    color: #2e6da4;
+    font-style: italic;
+}
+
+.addBtn {
+    border-radius: 50%
+}
+
+.right {
+    margin-top: 100px;
+}
+
+.preview, #submit {
+    margin-top: 50px;
+}
