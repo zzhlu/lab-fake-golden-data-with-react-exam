@@ -5,11 +5,6 @@ const App = React.createClass({
       elements: []
     }
   },
-  toggle: function () {
-    this.setState({
-      isEditor: !this.state.isEditor
-    });
-  },
   addElement: function (element) {
     const elements = this.state.elements;
     elements.push(element);
@@ -25,11 +20,7 @@ const App = React.createClass({
     });
   },
   render: function () {
-    const isEdite = this.state.isEditor;
     return <div>
-      <ReactRouter.Link onClick={this.toggle} to={isEdite ? '/preview' : '/edit'}>
-        {isEdite ? 'Preview' : 'Edit'}
-      </ReactRouter.Link>
       {
         this.props.children && React.cloneElement(this.props.children,
           {
@@ -46,6 +37,7 @@ const App = React.createClass({
 const Editor = React.createClass({
   render: function () {
     return <div>
+      <ReactRouter.Link to="/preview">Preview</ReactRouter.Link>
       <Right onAdd={this.props.onAdd}/>
       <Left elements={this.props.elements} onDelete={this.props.onDelete}/>
     </div>
@@ -87,6 +79,7 @@ const Left = React.createClass({
 const Preview = React.createClass({
   render: function () {
     return <div>
+      <ReactRouter.Link to="/">Edit</ReactRouter.Link>
       {
         this.props.elements.map((ele, index) => {
           return <div key={index}>
@@ -102,8 +95,9 @@ const Preview = React.createClass({
 ReactDOM.render(
   <ReactRouter.Router>
     <ReactRouter.Route path="/" component={App}>
+      <ReactRouter.IndexRoute component={Editor}/>
       <ReactRouter.Route path="/preview" component={Preview}/>
-      <ReactRouter.Route path="/edit" component={Editor}/>
     </ReactRouter.Route>
-  </ReactRouter.Router>, document.getElementById('content')
+  </ReactRouter.Router>
+  , document.getElementById('content')
 );
